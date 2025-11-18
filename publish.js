@@ -367,7 +367,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
             if (docdash.private === false && item.access === 'private') return;
 
             // depth to show?
-            if (item.ancestors && item.ancestors.length > level) {
+            if (item.ancestors?.length > level) {
                 classes += 'level-hide';
             }
 
