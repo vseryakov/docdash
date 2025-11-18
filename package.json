@@ -1,11 +1,11 @@
 {
-  "name": "vdocdash",
+  "name": "@veryakov/docdash",
   "version": "1.0.0",
   "description": "JSDoc 4 documentation template theme inspired by clenemt/docdash",
   "main": "publish.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vseryakov/vdocdash.git"
+    "url": "https://github.com/vseryakov/docdash.git"
   },
   "author": "Vlad Seryakov",
   "license": "Apache-2.0",

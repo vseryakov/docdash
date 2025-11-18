@@ -10,14 +10,14 @@ Visit the [documentation](https://vseryakov.github.io/backendjs/docs/web/index.h
 ## Install
 
 ```bash
-$ npm install vdocdash
+$ npm install @vseryakov/docdash
 ```
 
 ## Usage
 Clone repository to your designated `jsdoc` template directory, then:
 
 ```bash
-$ jsdoc entry-file.js -t path/to/vdocdash
+$ jsdoc entry-file.js -t path/to/docdash
 ```
 
 ## Usage (npm)
@@ -33,7 +33,7 @@ In your `jsdoc.json` file, add a template option.
 
 ```json
 "opts": {
-  "template": "node_modules/vdocdash"
+  "template": "node_modules/@vseryakov/docdash"
 }
 ```
 
@@ -53,7 +53,7 @@ In your `jsdoc.json` file, add a template option.
         "plugins/markdown"
     ],
     "opts": {
-        "template": "node_modules/vdocdash",
+        "template": "node_modules/@vseryakov/docdash",
         "encoding": "utf8",
         "destination": "docs/",
         "recurse": true,
