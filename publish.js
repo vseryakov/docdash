@@ -348,116 +348,111 @@ function attachModuleSymbols(doclets, modules) {
 function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
     var nav = '';
 
-    if (items && items.length) {
-        var itemsNav = '';
-        var docdash = env?.conf?.docdash || {};
-        var level = typeof docdash.navLevel === 'number' && docdash.navLevel >= 0 ?
-            docdash.navLevel :
-            Infinity;
+    if (!items?.length) return nav;
 
-        items.forEach(function(item) {
-            var displayName;
-            var methods = find({ kind: 'function', memberof: item.longname });
-            var members = find({ kind: 'member', memberof: item.longname });
-            var typedefs = find({ kind: 'typedef', memberof: item.longname });
-            var conf = env?.conf || {};
-            var classes = '';
+    var itemsNav = '';
+    var docdash = env?.conf?.docdash || {};
+    var level = typeof docdash.navLevel === 'number' && docdash.navLevel >= 0 ? docdash.navLevel : Infinity;
 
-            // show private class?
-            if (docdash.private === false && item.access === 'private') return;
+    items.forEach(function(item) {
+        var displayName;
+        var methods = find({ kind: 'function', memberof: item.longname });
+        var members = find({ kind: 'member', memberof: item.longname });
+        var typedefs = find({ kind: 'typedef', memberof: item.longname });
+        var conf = env?.conf || {};
+        var classes = '';
 
-            // depth to show?
-            if (item.ancestors?.length > level) {
-                classes += 'level-hide';
+        // show private class?
+        if (docdash.private === false && item.access === 'private') return;
+
+        // depth to show?
+        if (item.ancestors?.length > level) {
+            classes += 'level-hide';
+        }
+
+        classes = classes ? ' class="'+ classes + '"' : '';
+        itemsNav += '<li'+ classes +'>';
+        if (!hasOwnProp.call(item, 'longname')) {
+            itemsNav += linktoFn('', item.name);
+        } else
+        if (!hasOwnProp.call(itemsSeen, item.longname)) {
+            if (conf.templates.default.useLongnameInNav) {
+                displayName = item.longname;
+            } else {
+                displayName = item.name;
+            }
+            itemsNav += linktoFn(item.longname, displayName.replace(/\b(module|event):/g, ''));
+
+            if (docdash.static && members.find((m) => (m.scope === 'static'))) {
+                itemsNav += "<ul class='members'>";
+
+                members.forEach((member) => {
+                    if (!member.scope === 'static') return;
+                    itemsNav += "<li data-type='member'";
+                    if (docdash.collapse) itemsNav += " style='display: none;'";
+                    itemsNav += ">";
+                    itemsNav += linkto(member.longname, member.name);
+                    itemsNav += "</li>";
+                });
+                itemsNav += "</ul>";
             }
 
-            classes = classes ? ' class="'+ classes + '"' : '';
-            itemsNav += '<li'+ classes +'>';
-            if (!hasOwnProp.call(item, 'longname')) {
-                itemsNav += linktoFn('', item.name);
-            } else
-            if (!hasOwnProp.call(itemsSeen, item.longname)) {
-                if (conf.templates.default.useLongnameInNav) {
-                    displayName = item.longname;
-                } else {
-                    displayName = item.name;
-                }
-                itemsNav += linktoFn(item.longname, displayName.replace(/\b(module|event):/g, ''));
+            if (methods.length) {
+                itemsNav += "<ul class='methods'>";
 
-                if (docdash.static && members.find(function (m) { return m.scope === 'static'; })) {
-                    itemsNav += "<ul class='members'>";
+                methods.forEach((method) => {
+                    if (docdash.static === false && method.scope === 'static') return;
+                    if (docdash.private === false && method.access === 'private') return;
 
-                    members.forEach(function (member) {
-                        if (!member.scope === 'static') return;
-                        itemsNav += "<li data-type='member'";
-                        if (docdash.collapse) itemsNav += " style='display: none;'";
-                        itemsNav += ">";
-                        itemsNav += linkto(member.longname, member.name);
-                        itemsNav += "</li>";
-                    });
+                    var navItem = '';
+                    var navItemLink = linkto(method.longname, method.name);
 
-                    itemsNav += "</ul>";
-                }
-
-                if (methods.length) {
-                    itemsNav += "<ul class='methods'>";
-
-                    methods.forEach(function (method) {
-                        if (docdash.static === false && method.scope === 'static') return;
-                        if (docdash.private === false && method.access === 'private') return;
-
-                        var navItem = '';
-                        var navItemLink = linkto(method.longname, method.name);
-
-                        navItem += "<li data-type='method'";
-                        if (docdash.collapse) navItem += " style='display: none;'";
-                        navItem += ">";
-                        navItem += navItemLink;
-                        navItem += "</li>";
-
-                        itemsNav += navItem;
-                    });
-
-                    itemsNav += "</ul>";
-                }
-                if (docdash.typedefs) {
-                    itemsNav += "<ul class='typedefs'>";
-
-                    typedefs.forEach(function (typedef) {
-                        if (docdash.static === false && typedef.scope === 'static') return;
-                        itemsNav += "<li data-type='typedef'";
-                        if (docdash.collapse) itemsNav += " style='display: none;'";
-                        itemsNav += ">";
-                        itemsNav += linkto(typedef.longname, typedef.name);
-                        itemsNav += "</li>";
-                    });
-
-                    itemsNav += "</ul>";
-                }
-
-                itemsSeen[item.longname] = true;
+                    navItem += "<li data-type='method'";
+                    if (docdash.collapse) navItem += " style='display: none;'";
+                    navItem += ">";
+                    navItem += navItemLink;
+                    navItem += "</li>";
+                    itemsNav += navItem;
+                });
+                itemsNav += "</ul>";
             }
-            itemsNav += '</li>';
-        });
+            if (docdash.typedefs && typedefs?.length) {
+                itemsNav += "<ul class='typedefs'>";
 
-        if (itemsNav !== '') {
-            if (docdash.collapse === "top") {
-                nav += '<h3 class="collapsed_header">' + itemHeading + '</h3><ul class="collapse_top">' + itemsNav + '</ul>';
+                typedefs.forEach((typedef) => {
+                    if (docdash.static === false && typedef.scope === 'static') return;
+                    itemsNav += "<li data-type='typedef'";
+                    if (docdash.collapse) itemsNav += " style='display: none;'";
+                    itemsNav += ">";
+                    itemsNav += linkto(typedef.longname, typedef.name);
+                    itemsNav += "</li>";
+                });
+                itemsNav += "</ul>";
             }
-            else {
-                nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
-            }
+
+            itemsSeen[item.longname] = true;
+        }
+        itemsNav += '</li>';
+    });
+
+    if (itemsNav !== '') {
+        if (docdash.collapse === "top") {
+            nav += '<h3 class="collapsed_header">' + itemHeading + '</h3><ul class="collapse_top">' + itemsNav + '</ul>';
+        }
+        else {
+            nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
         }
     }
-
     return nav;
 }
 
-function linktoTutorial(longName, name) {
+function linktoTutorial(longName, name)
+{
     return tutoriallink(name);
 }
 
-function linktoExternal(longName, name) {
+function linktoExternal(longName, name)
+{
     return linkto(longName, name.replace(/(^"|"$)/g, ''));
 }
 
@@ -775,7 +770,7 @@ exports.publish = function(taffyData, opts, tutorials)
 
 
     // output pretty-printed source files by default
-    var outputSourceFiles = conf.default && conf.default.outputSourceFiles !== false ? true : false;
+    var outputSourceFiles = conf.default?.outputSourceFiles !== false ? true : false;
 
     // add template helpers
     view.find = find;
@@ -821,7 +816,7 @@ exports.publish = function(taffyData, opts, tutorials)
     var externals = members.externals;
     var interfaces = members.interfaces;
 
-    Object.keys(helper.longnameToUrl).forEach(function(longname) {
+    Object.keys(helper.longnameToUrl).forEach((longname) => {
         var myModules = matcher(modules, { longname });
         if (myModules.length) {
             generate('Module', myModules[0].name, myModules, helper.longnameToUrl[longname]);

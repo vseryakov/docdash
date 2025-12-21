@@ -2,12 +2,12 @@
     var self = this;
     var isGlobalPage;
 
-    docs.forEach(function(doc, i) {
+    docs.forEach((doc, i) => {
 ?>
 
 <?js
     // we only need to check this once
-    if (typeof isGlobalPage === 'undefined') {
+    if (isGlobalPage === undefined) {
         isGlobalPage = (doc.kind === 'globalobj');
     }
     var classes = self.find({kind: 'class', memberof: doc.longname});
@@ -27,7 +27,7 @@
 
 <section>
 
-<?js if (doc.kind === 'module') { ?>
+<?js if (doc.kind === 'module' || doc.kind == "namespace") { ?>
     <div class="toc">
     <?js if (typedefs?.length) { ?>
         <h4><a href="#typedefs">↓ Typedefs.</a></h4>
@@ -61,7 +61,7 @@
             <div class="class-description usertext"><?js= doc.classdesc ?></div>
         <?js } ?>
     <?js } else if (doc.kind === 'module' && doc.modules) { ?>
-        <?js doc.modules.forEach(function(module) { ?>
+        <?js doc.modules.forEach((module) => { ?>
             <?js if (module.classdesc) { ?>
                 <div class="class-description"><?js= module.classdesc ?></div>
             <?js } ?>
@@ -77,7 +77,7 @@
                 <div class="description usertext"><?js= doc.description ?></div>
             <?js } ?>
 
-            <?js doc.modules.forEach(function(module) { ?>
+            <?js doc.modules.forEach((module) => { ?>
                 <?js= self.partial('method.tmpl', module) ?>
             <?js }) ?>
         <?js } else if (doc.kind === 'class') { ?>
@@ -99,16 +99,16 @@
         </div>
     <?js } ?>
 
-    <?js if (doc.augments && doc.augments.length) { ?>
+    <?js if (doc.augments?.length) { ?>
         <h3 class="subsection-title">Extends</h3>
 
         <?js= self.partial('augments.tmpl', doc) ?>
     <?js } ?>
 
-    <?js if (doc.requires && doc.requires.length) { ?>
+    <?js if (doc.requires?.length) { ?>
         <h3 class="subsection-title">Requires</h3>
 
-        <ul><?js doc.requires.forEach(function(r) { ?>
+        <ul><?js doc.requires.forEach((r) => { ?>
             <li><?js= self.linkto(r, r) ?></li>
         <?js }); ?></ul>
     <?js } ?>
@@ -120,7 +120,7 @@
             <h2 class="subsection-title">Classes</h2>
         </a>
 
-        <dl><?js classes.forEach(function(c) { ?>
+        <dl><?js classes.forEach((c) => { ?>
             <dt><?js= self.linkto(c.longname, c.name) ?></dt>
             <dd><?js if (c.summary) { ?><?js= c.summary ?><?js } ?></dd>
         <?js }); ?></dl>
@@ -133,7 +133,7 @@
             <h2 class="subsection-title">Type Definitions</h2>
         </a>
 
-        <?js typedefs.forEach(function(e) {
+        <?js typedefs.forEach((e) => {
                 if (e.signature) {
             ?>
                 <?js= self.partial('method.tmpl', e) ?>
@@ -154,7 +154,7 @@
            <h2 class="subsection-title">Interfaces</h2>
        </a>
 	
-	    <dl><?js interfaces.forEach(function(i) { ?>		
+	    <dl><?js interfaces.forEach((i) => { ?>
 	        <dt><?js= self.linkto(i.longname, i.name) ?></dt>		
 	        <dd><?js if (i.summary) { ?><?js= i.summary ?><?js } ?></dd>		
 	    <?js }); ?></dl>		
@@ -167,7 +167,7 @@
             <h2 class="subsection-title">Mixins</h2>
         </a>
 
-        <dl><?js mixins.forEach(function(m) { ?>
+        <dl><?js mixins.forEach((m) => { ?>
             <dt><?js= self.linkto(m.longname, m.name) ?></dt>
             <dd><?js if (m.summary) { ?><?js= m.summary ?><?js } ?></dd>
         <?js }); ?></dl>
@@ -180,19 +180,16 @@
             <h2 class="subsection-title">Namespaces</h2>
         </a>
 
-        <dl><?js namespaces.forEach(function(n) { ?>
+        <dl><?js namespaces.forEach((n) => { ?>
             <dt><?js= self.linkto(n.longname, n.name) ?></dt>
             <dd><?js if (n.summary) { ?><?js= n.summary ?><?js } ?></dd>
         <?js }); ?></dl>
     <?js } ?>
 
     <?js
-
         // symbols that are assigned to module.exports are not globals, even though they're not a memberof anything
-        if (isGlobalPage && members && members.length && members.forEach) {
-            members = members.filter(function(m) {
-                return m.longname && m.longname.indexOf('module:') !== 0;
-            });
+        if (isGlobalPage && members?.length && members.forEach) {
+            members = members.filter((m) => (m.longname && m.longname.indexOf('module:') !== 0));
         }
         if (members?.length && members.forEach) {
     ?>
@@ -200,10 +197,12 @@
             <h2 class="subsection-title">Members</h2>
         </a>
 
-        <?js members.forEach(function(p) { ?>
+        <?js members.forEach((p) => { ?>
             <?js= self.partial('members.tmpl', p) ?>
         <?js }); ?>
+
     <?js } ?>
+
 
     <?js
         if (methods?.length && methods.forEach) {
@@ -212,7 +211,7 @@
             <h2 class="subsection-title">Methods</h2>
         </a>
 
-        <?js methods.forEach(function(m) { ?>
+        <?js methods.forEach((m) => { ?>
             <?js= self.partial('method.tmpl', m) ?>
         <?js }); ?>
     <?js } ?>
@@ -224,7 +223,7 @@
             <h2 class="subsection-title">Events</h2>
         </a>
 
-        <?js events.forEach(function(e) { ?>
+        <?js events.forEach((e) => { ?>
             <?js= self.partial('method.tmpl', e) ?>
         <?js }); ?>
     <?js } ?>

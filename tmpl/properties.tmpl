@@ -22,7 +22,7 @@
     props.hasName = false;
 
     props.forEach(function(prop) {
-        if (!prop) { return; }
+        if (!prop) return;
 
         if (prop.optional || prop.nullable) {
             props.hasAttributes = true;
@@ -63,7 +63,7 @@
     <?js
         var self = this;
         props.forEach(function(prop) {
-            if (!prop) { return; }
+            if (!prop) return;
     ?>
 
         <tr>
