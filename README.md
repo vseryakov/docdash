@@ -8,6 +8,7 @@ Main differences:
  - types and tutorials are at the top
  - styling colors more bluish
  - tutorials sorting
+ - tutorial side nav sections
 
 ## Example
 

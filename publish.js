@@ -23,23 +23,16 @@ function copyFile(source, target, cb) {
   var cbCalled = false;
 
   var rd = fs.createReadStream(source);
-  rd.on("error", function(err) {
-    done(err);
-  });
+  rd.on("error", (err) => { done(err) });
   var wr = fs.createWriteStream(target);
-  wr.on("error", function(err) {
-    done(err);
-  });
-  wr.on("close", function(ex) {
-    done();
-  });
+  wr.on("error", (err) => { done(err) });
+  wr.on("close", (ex) => { done() });
   rd.pipe(wr);
 
   function done(err) {
-    if (!cbCalled) {
-      cb(err);
-      cbCalled = true;
-    }
+    if (cbCalled) return;
+    cb(err);
+    cbCalled = true;
   }
 }
 
@@ -95,7 +88,7 @@ function getAncestorLinks(doclet) {
 }
 
 function hashToLink(doclet, hash) {
-    if (!/^(#.+)/.test(hash)) { return hash; }
+    if (!/^(#.+)/.test(hash)) return hash;
 
     var url = helper.createLink(doclet).replace(/(#.+|$)/, hash);
     return `<a href="${url}">${hash}</a>`;
@@ -222,15 +215,17 @@ function addSignatureReturns(f) {
         returnTypesString = util.format(' &rarr; %s{%s}', attribsString, returnTypes.join('|'));
     }
 
-    f.signature = '<span class="signature">' + (f.signature || '') + '</span>' +
-        '<span class="type-signature">' + returnTypesString + '</span>';
+    f.signature = '<span class="signature">' +
+                  (f.signature || '') + '</span>' +
+                  '<span class="type-signature">' + returnTypesString + '</span>';
 }
 
 function addSignatureTypes(f) {
     var types = f.type ? buildItemTypeStrings(f) : [];
 
-    f.signature = (f.signature || '') + '<span class="type-signature">' +
-        (types.length ? ' :' + types.join('|') : '') + '</span>';
+    f.signature = (f.signature || '') +
+                  '<span class="type-signature">' +
+                  (types.length ? ' :' + types.join('|') : '') + '</span>';
 }
 
 function addAttribs(f) {
@@ -354,7 +349,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
     var docdash = env?.conf?.docdash || {};
     var level = typeof docdash.navLevel === 'number' && docdash.navLevel >= 0 ? docdash.navLevel : Infinity;
 
-    items.forEach(function(item) {
+    items.forEach((item) => {
         var displayName;
         var methods = find({ kind: 'function', memberof: item.longname });
         var members = find({ kind: 'member', memberof: item.longname });
@@ -416,6 +411,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                 });
                 itemsNav += "</ul>";
             }
+
             if (docdash.typedefs && typedefs?.length) {
                 itemsNav += "<ul class='typedefs'>";
 
@@ -428,6 +424,21 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                     itemsNav += "</li>";
                 });
                 itemsNav += "</ul>";
+            }
+
+            if (item.sections?.length) {
+                itemsNav += "<ul class='members'>";
+
+                item.sections.forEach((name) => {
+                    itemsNav += "<li data-type='method'";
+                    if (docdash.collapse) itemsNav += " style='display: none;'";
+                    itemsNav += ">";
+                    var slug = name.trim().replaceAll(" ", "-").replace(/[^a-z0-9.-]/ig, "").toLowerCase();
+                    itemsNav += `<a href="tutorial-${item.longname}.html#${slug}">${name}</a>`;
+                    itemsNav += "</li>";
+                });
+                itemsNav += "</ul>";
+
             }
 
             itemsSeen[item.longname] = true;
@@ -479,7 +490,6 @@ function buildNav(members) {
     if (docdash.menu) {
         for (var menu in docdash.menu) {
             nav += '<h2><a ';
-            //add attributes
             for (var attr in docdash.menu[menu]) {
                 nav += attr+'="' + docdash.menu[menu][attr] + '" ';
             }
@@ -573,7 +583,7 @@ exports.publish = function(taffyData, opts, tutorials)
 
     var sourceFiles = {};
     var sourceFilePaths = [];
-    data().each(function(doclet) {
+    data().each((doclet) => {
          if (docdash.removeQuotes) {
             if (docdash.removeQuotes === "all") {
                 if (doclet.name) {
@@ -685,14 +695,14 @@ exports.publish = function(taffyData, opts, tutorials)
         staticFileFilter = new (require('jsdoc/src/filter')).Filter(conf.default.staticFiles);
         staticFileScanner = new (require('jsdoc/src/scanner')).Scanner();
 
-        staticFilePaths.forEach(function(filePath) {
+        staticFilePaths.forEach((filePath) => {
             var extraStaticFiles = staticFileScanner.scan([filePath], 10, staticFileFilter);
 
-            extraStaticFiles.forEach(function(fileName) {
+            extraStaticFiles.forEach((fileName) => {
                 var sourcePath = fs.toDir(filePath);
                 var toDir = fs.toDir(fileName.replace(sourcePath, outdir));
                 fs.mkPath(toDir);
-                copyFile(fileName, path.join(toDir, path.basename(fileName)), function(err) { if (err) console.err(err);});
+                copyFile(fileName, path.join(toDir, path.basename(fileName)), (err) => { if (err) console.err(err);});
             });
         });
     }
@@ -700,7 +710,7 @@ exports.publish = function(taffyData, opts, tutorials)
     if (sourceFilePaths.length) {
         sourceFiles = shortenPaths(sourceFiles, path.commonPrefix(sourceFilePaths));
     }
-    data().each(function(doclet) {
+    data().each((doclet) => {
         var url = helper.createLink(doclet);
         if (docdash.noURLEncode) {
             url = decodeURI(url);
@@ -718,7 +728,7 @@ exports.publish = function(taffyData, opts, tutorials)
         }
     });
 
-    data().each(function(doclet) {
+    data().each((doclet) => {
         var url = helper.longnameToUrl[doclet.longname];
 
         if (url.indexOf('#') > -1) {
@@ -736,7 +746,7 @@ exports.publish = function(taffyData, opts, tutorials)
     });
 
     // do this after the urls have all been generated
-    data().each(function(doclet) {
+    data().each((doclet) => {
         doclet.ancestors = getAncestorLinks(doclet);
 
         if (doclet.kind === 'member') {
@@ -766,6 +776,7 @@ exports.publish = function(taffyData, opts, tutorials)
         if (x.title == x.name && x.content.startsWith("# ")) {
             x.title = x.content.substr(2, x.content.indexOf("\n", 2) - 2).trim();
         }
+        x.sections = x.content.split("\n").filter(l => /^## /.test(l)).map(l => l.substr(3).trim());
     });
 
 
