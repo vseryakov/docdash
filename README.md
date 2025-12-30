@@ -8,23 +8,23 @@ Main differences:
  - types and tutorials are at the top
  - styling colors more bluish
  - tutorials sorting
- - tutorial side nav sections
+ - tutorial side nav sections for ## headings
 
 ## Example
 
-Visit the [documentation](https://vseryakov.github.io/backendjs/docs/web/index.html).
+Visit the [backendjs documentation](https://vseryakov.github.io/backendjs/docs/web/index.html).
 
 ## Install
 
 ```bash
-$ npm install @vseryakov/docdash
+$ npm install vdocdash
 ```
 
 ## Usage
 Clone repository to your designated `jsdoc` template directory, then:
 
 ```bash
-$ jsdoc entry-file.js -t path/to/docdash
+$ jsdoc entry-file.js -t path/to/vdocdash
 ```
 
 ## Usage (npm)
@@ -40,7 +40,7 @@ In your `jsdoc.json` file, add a template option.
 
 ```json
 "opts": {
-  "template": "node_modules/@vseryakov/docdash"
+  "template": "node_modules/vdocdash"
 }
 ```
 
