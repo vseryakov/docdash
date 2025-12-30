@@ -1,6 +1,6 @@
 {
   "name": "dashjsdoc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JSDoc 4 documentation template theme inspired by clenemt/docdash",
   "main": "publish.js",
   "repository": {

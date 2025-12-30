@@ -10,9 +10,11 @@ Main differences:
  - tutorials sorting
  - tutorial side nav sections for ## headings
 
-## Example
+## Examples
 
 Visit the [backendjs documentation](https://vseryakov.github.io/backendjs/docs/web/index.html).
+
+Visit the [Alpinejs-app documentation](https://vseryakov.github.io/alpinejs-app/docs/web/index.html).
 
 ## Install
 
