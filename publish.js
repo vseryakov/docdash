@@ -300,7 +300,7 @@ function generateSourceFiles(sourceFiles, encoding) {
 
 /**
  * Look for classes or functions with the same name as modules (which indicates that the module
- * exports only that class or function), then attach the classes or functions to the `module`
+ * exports only that class or function), then attach the classes or functions to the `modules`
  * property of the appropriate module doclets. The name of each class or function is also updated
  * for display purposes. This function mutates the original arrays.
  *
@@ -326,13 +326,11 @@ function attachModuleSymbols(doclets, modules) {
                 filter(function(symbol) {
                     return symbol.description || symbol.kind === 'class';
                 }).
-                map(function(symbol) {
+                map((symbol) => {
                     symbol = doop(symbol);
-
                     if (symbol.kind === 'class' || symbol.kind === 'function' && !symbol.hideconstructor) {
                         symbol.name = symbol.name.replace('module:', '(require("') + '"))';
                     }
-
                     return symbol;
                 });
         }

@@ -73,8 +73,8 @@
     <?js if (!doc.hideconstructor) { ?>
         <div class="container-overview">
         <?js if (doc.kind === 'module' && doc.modules) { ?>
-            <?js if (doc.description) { ?>
-                <div class="description usertext"><?js= doc.description ?></div>
+            <?js if (doc.summary) { ?>
+                <p class="summary usertext"><?js= doc.summary ?></p>
             <?js } ?>
 
             <?js doc.modules.forEach((module) => { ?>
