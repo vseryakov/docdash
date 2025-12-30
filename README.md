@@ -59,6 +59,9 @@ In your `jsdoc.json` file, add a template option.
     "plugins": [
         "plugins/markdown"
     ],
+    "markdown": {
+        "idInHeadings": true
+    },
     "opts": {
         "template": "node_modules/@vseryakov/docdash",
         "encoding": "utf8",
