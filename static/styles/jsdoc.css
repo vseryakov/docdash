@@ -201,8 +201,8 @@ h6 {
 
 tt, code, kbd, samp, pre {
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    background-color: var(--bg-source);
-    color: var(--color-source);
+    background-color: var(--code-bg-color);
+    color: var(--code-color);
 }
 
 tt, code, kbd, samp{
