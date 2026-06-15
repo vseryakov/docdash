@@ -1,26 +1,7 @@
 <?js
-    var data = obj;
-    var self = this;
-    data.forEach((name, i) => {
-    if (env?.conf?.docdash?.shortenTypes === true) {
-        var nameArr = name.split(/[\.~#]/);
-        var resolvedName = nameArr[nameArr.length - 1];
-        if (name.startsWith("Array.<")) {
-            if (nameArr.length === 2) {
-                resolvedName = name;
-            } else {
-                resolvedName = resolvedName.replace(">", "");
-                var longname = name.replace("Array.<","").replace(">", "");
-            }
-        }
-    } else {
-        var resolvedName = name;
-    }
-    var link = self.linkto(name, self.htmlsafe(resolvedName));
-    if (longname) {
-        link = link.replace(longname, resolvedName);
-    }
-    if (i < data.length-1) link += " | ";
+    obj.forEach((name, i) => {
+        var link = this.linkto(name, this.htmlsafe(name));
+        if (i < obj.length-1) link += " | ";
 ?>
 
 <span class="param-type"><?js=link?></span>

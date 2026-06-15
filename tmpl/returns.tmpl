@@ -1,9 +1,3 @@
-<?js
-    var names = obj.type.names;
-    if (names?.length == 1 && names[0] == "Object" && obj.type.parsedType?.fields?.length) {
-        names = [this.stringifyType(obj.type.parsedType)];
-    }
-?>
 <table class="params">
     <thead>
     <tr>
@@ -15,8 +9,14 @@
     <tbody>
         <tr>
             <td class="type">
-                <?js if (names?.length) {?>
-                <?js= this.partial('type.tmpl', names) ?>
+                <?js if (this.stringifyType && obj.type.parsedType) {?>
+                <?js
+                    var type = this.stringifyType(obj.type.parsedType).replaceAll("|", " | ");
+                    if (type[0] == "(" && type.at(-1) == ")") type = type.slice(1, -1);
+                    print(type);
+                ?>
+                <?js } else {?>
+                <?js= this.partial('type.tmpl', obj.names) ?>
                 <?js } ?>
             </td>
             <td class="description last">
