@@ -167,6 +167,16 @@ function buildItemTypeStrings(item) {
     return types;
 }
 
+function stringifyType(type) {
+    if (helper.stringifyType && type?.parsedType) {
+        type = helper.stringifyType(type.parsedType, undefined, helper.longnameToUrl).replaceAll("|", " | ");
+        if (type[0] == "(" && type.at(-1) == ")") type = type.slice(1, -1);
+        return type;
+    }
+    if (!type?.names?.length) return "";
+    return type.names.map(name => this.linkto(name, this.htmlsafe(name))).join(" | ");
+}
+
 function buildAttribsString(attribs) {
     var attribsString = '';
 
@@ -788,7 +798,7 @@ exports.publish = function(taffyData, opts, tutorials)
     view.tutoriallink = tutoriallink;
     view.htmlsafe = htmlsafe;
     view.outputSourceFiles = outputSourceFiles;
-    view.stringifyType = helper.stringifyType;
+    view.stringifyType = stringifyType;
 
     // once for all
     view.nav = buildNav(members);
