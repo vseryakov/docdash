@@ -6,9 +6,13 @@ JSDoc 4 documentation template theme forked and modified from clenemt/docdash.
 Main differences:
  - automatic dark/light mode based on the system settings
  - types and tutorials are at the top
- - styling colors more bluish
+ - styling colors
  - tutorials sorting
  - tutorial side nav sections for ## headings
+ - Closure compiler types
+
+![Screenshot1](screenshot1.jpg)
+![Screenshot2](screenshot2.jpg)
 
 ## Examples
 
