@@ -69,7 +69,7 @@ In your `jsdoc.json` file, add a template option.
         "idInHeadings": true
     },
     "opts": {
-        "template": "node_modules/@vseryakov/docdash",
+        "template": "node_modules/dashjsdoc",
         "encoding": "utf8",
         "destination": "docs/",
         "recurse": true,

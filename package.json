@@ -5,7 +5,7 @@
   "main": "publish.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vseryakov/docdash.git"
+    "url": "https://github.com/vseryakov/dashjsdoc.git"
   },
   "author": "Vlad Seryakov",
   "license": "Apache-2.0",
